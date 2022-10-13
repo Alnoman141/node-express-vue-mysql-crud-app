@@ -19,9 +19,14 @@ const corsOptions = {
 };
 
 // database configaration
-db.sequelize.sync({ force: true }).then(() => {
-    console.log('Drop and re-sync db.');
-});
+db.sequelize
+    .sync()
+    .then(() => {
+        console.log('Drop and re-sync db.');
+    })
+    .catch((error) => {
+        console.log(`Failed to sync db: ${error.message}`);
+    });
 
 // assign cors
 app.use(cors(corsOptions));
@@ -31,6 +36,9 @@ app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// register router
+require('./app/routes/turorial.routes')(app);
 
 // a simple route
 app.get('/', (req, res) => {
